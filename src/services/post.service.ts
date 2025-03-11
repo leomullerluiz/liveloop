@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const API_URL = 'https://api-liveloop.leomullerluiz.com/wp-json/wp/v2/posts/8';
+const URL = `${import.meta.env.VITE_API_URL}posts/8`;
 
 export const getPostDataById = async () => {
-    const response = await axios.get(API_URL);
+    const response = await axios.get(URL);
     return response.data;
 }
