@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { getPostDataById } from '../services/post.service';
-import { Button } from '@/components/ui/button';
-
+import PostCard from '@/components/custom/PostCard';
+import { getPostList } from '@/services/post.service';
+import { useEffect, useState } from 'react';
 
 function Home() {
+
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [, setError] = useState("");
@@ -11,7 +11,7 @@ function Home() {
     const getData = async () => {
         try {
             setLoading(true);
-            const postData = await getPostDataById();
+            const postData = await getPostList();
             setData(postData);
         } catch (err) {
             setError((err as Error).message);
@@ -20,15 +20,24 @@ function Home() {
         }
     };
 
+    useEffect(() => {
+        getData();
+    }, []);
+
+    useEffect(() => {
+        console.log('Dados atualizados:', data);
+    }, [data]);
+
     return (
-        <div className="flex flex-col items-center justify-center min-h-svh text-center">
-            Tailwind ✅ <br />
-            Shadcn ✅ <br />
-            Darkmode ✅ <br />
-            Navigation/Routes ✅ <br />
-            Axios ✅ <br />
-            <Button onClick={getData}>Get Data {loading && <div>Loading...</div>}</Button>
-            {data && <div>Data: {JSON.stringify(data)}</div>}
+        <div className="items-center min-h-svh">
+            <div className="container mx-auto flex gap-2 ">
+                <PostCard
+                    loading={loading}
+                    excerpt={data?.[1]?.excerpt.rendered}
+                    title={data?.[1]?.title.rendered}
+                />
+            </div>
+
         </div>
     );
 }
